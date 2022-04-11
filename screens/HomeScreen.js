@@ -7,6 +7,9 @@ const HomeScreen = (props) => {
       <TouchableOpacity onPress={() => props.navigation.navigate("Profile")}>
         <Text>Edit Profile</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => props.navigation.navigate("New Match")}>
+        <Text>New Match</Text>
+      </TouchableOpacity>
     </View>
   );
 };

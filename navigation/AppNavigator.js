@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import NewMatchScreen from "../screens/NewMatchScreen";
 
 const Stack = createStackNavigator();
 
@@ -31,6 +32,21 @@ function AppNavigator() {
           component={ProfileScreen}
           options={{
             title: "Edit Profile",
+            headerStyle: {
+              backgroundColor: "#43b599",
+            },
+            headerTintColor: "white",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+            headerTitleAlign: "center",
+          }}
+        />
+        <Stack.Screen
+          name="New Match"
+          component={NewMatchScreen}
+          options={{
+            title: "New Match",
             headerStyle: {
               backgroundColor: "#43b599",
             },
