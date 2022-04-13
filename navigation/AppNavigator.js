@@ -12,7 +12,7 @@ const Stack = createStackNavigator();
 function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Sign up">
+      <Stack.Navigator initialRouteName="Authorization">
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -59,10 +59,10 @@ function AppNavigator() {
           }}
         />
         <Stack.Screen
-          name="Sign up"
+          name="Authorization"
           component={SignupScreen}
           options={{
-            title: "Sign up",
+            title: "Authorization",
             headerStyle: {
               backgroundColor: "#43b599",
             },
