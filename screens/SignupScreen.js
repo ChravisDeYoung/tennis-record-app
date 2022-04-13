@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Text,
-  TextInput,
-  View,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 import { auth } from "../FirebaseConfig";
 
@@ -18,49 +11,119 @@ const SignupScreen = () => {
     if (email !== "" && password !== "")
       auth
         .createUserWithEmailAndPassword(email, password)
-        .then(function (_firebaseUser) {
-          console.log("user registered!");
-
+        .then(() => {
           setEmail("");
           setPassword("");
-          console.log(_firebaseUser);
         })
-        .catch(function (error) {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-
-          if (errorCode == "auth/weak-password") {
-            console.log("The password is too weak.");
-          } else {
-            console.log(errorMessage);
-          }
+        .catch((error) => {
           console.log(error);
         });
   };
 
   return (
-    <View>
-      <Text>Register with Firebase</Text>
-      <TextInput
-        onChangeText={(value) => setEmail(value)}
-        autoCapitalize="none"
-        autoCorrect={false}
-        autoCompleteType="email"
-        keyboardType="email-address"
-        placeholder="email"
-      />
-      <TextInput
-        onChangeText={(value) => setPassword(value)}
-        autoCapitalize="none"
-        autoCorrect={false}
-        autoCompleteType="password"
-        keyboardType="visible-password"
-        placeholder="password"
-      />
-      <TouchableOpacity onPress={registerWithFirebase}>
-        <Text>Sign up</Text>
-      </TouchableOpacity>
-      {/* <Button title="Register" onPress={registerWithFirebase} /> */}
+    <View style={{ height: "100%", overflow: "hidden" }}>
+      <View
+        style={{
+          backgroundColor: "lightpink",
+          width: "80vw",
+          height: "80vw",
+          borderRadius: "40vw",
+          position: "absolute",
+          left: "-10vw",
+          top: "-10vw",
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: "lightgreen",
+            width: "80vw",
+            height: "80vw",
+            borderRadius: "40vw",
+            position: "relative",
+            top: "60vw",
+            left: "40vw",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "yellow",
+              width: "100vw",
+              height: "100vw",
+              borderRadius: "50vw",
+              position: "relative",
+              top: "60vw",
+              right: "80vw",
+            }}
+          ></View>
+        </View>
+      </View>
+      <View
+        style={{
+          backgroundColor: "lightblue",
+          width: "80vw",
+          alignSelf: "center",
+          padding: 15,
+          marginTop: "20vh",
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: 10,
+          }}
+        >
+          Sign up
+        </Text>
+        <TextInput
+          onChangeText={(value) => setEmail(value)}
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoCompleteType="email"
+          keyboardType="email-address"
+          placeholder="email"
+          style={{
+            backgroundColor: "white",
+            margin: 10,
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            fontSize: 15,
+          }}
+        />
+        <TextInput
+          onChangeText={(value) => setPassword(value)}
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoCompleteType="password"
+          keyboardType="visible-password"
+          placeholder="password"
+          style={{
+            backgroundColor: "white",
+            margin: 10,
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            fontSize: 15,
+          }}
+        />
+        <TouchableOpacity
+          onPress={registerWithFirebase}
+          style={{
+            backgroundColor: "#c4c4c4",
+            padding: 10,
+            textAlign: "center",
+            width: "30vw",
+            alignSelf: "center",
+            margin: 10,
+          }}
+        >
+          <Text style={{ fontSize: 15 }}>Register</Text>
+        </TouchableOpacity>
+        <Text style={{ alignSelf: "center" }}>
+          Already a member?{" "}
+          <Text style={{ textDecorationLine: "underline" }}>Log in</Text>
+        </Text>
+      </View>
     </View>
   );
 };
