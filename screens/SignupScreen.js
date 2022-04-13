@@ -3,7 +3,8 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 import { auth } from "../FirebaseConfig";
 
-const SignupScreen = () => {
+const SignupScreen = (props) => {
+  const [showRegister, setShowRegister] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,12 +13,20 @@ const SignupScreen = () => {
       auth
         .createUserWithEmailAndPassword(email, password)
         .then(() => {
-          setEmail("");
-          setPassword("");
+          props.navigation.navigate("Home");
         })
         .catch((error) => {
           console.log(error);
         });
+  };
+
+  const loginWithFirebase = () => {
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        props.navigation.navigate("Home");
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -74,7 +83,7 @@ const SignupScreen = () => {
             marginBottom: 10,
           }}
         >
-          Sign up
+          {showRegister ? "Sign up" : "Welcome back"}
         </Text>
         <TextInput
           onChangeText={(value) => setEmail(value)}
@@ -107,7 +116,7 @@ const SignupScreen = () => {
           }}
         />
         <TouchableOpacity
-          onPress={registerWithFirebase}
+          onPress={showRegister ? registerWithFirebase : loginWithFirebase}
           style={{
             backgroundColor: "#c4c4c4",
             padding: 10,
@@ -117,11 +126,18 @@ const SignupScreen = () => {
             margin: 10,
           }}
         >
-          <Text style={{ fontSize: 15 }}>Register</Text>
+          <Text style={{ fontSize: 15 }}>
+            {showRegister ? "Register" : "Log in"}
+          </Text>
         </TouchableOpacity>
         <Text style={{ alignSelf: "center" }}>
-          Already a member?{" "}
-          <Text style={{ textDecorationLine: "underline" }}>Log in</Text>
+          {showRegister ? "Already a member? " : "Not yet a member? "}
+          <Text
+            style={{ textDecorationLine: "underline" }}
+            onPress={() => setShowRegister(!showRegister)}
+          >
+            {showRegister ? "Log in" : "Sign up"}
+          </Text>
         </Text>
       </View>
     </View>
