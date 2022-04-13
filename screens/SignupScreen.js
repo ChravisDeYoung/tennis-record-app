@@ -34,34 +34,34 @@ const SignupScreen = (props) => {
       <View
         style={{
           backgroundColor: "lightpink",
-          width: "80vw",
-          height: "80vw",
-          borderRadius: "40vw",
+          width: 200,
+          height: 200,
+          borderRadius: 100,
           position: "absolute",
-          left: "-10vw",
-          top: "-10vw",
+          left: -10,
+          top: -10,
         }}
       >
         <View
           style={{
             backgroundColor: "lightgreen",
-            width: "80vw",
-            height: "80vw",
-            borderRadius: "40vw",
+            width: 300,
+            height: 300,
+            borderRadius: 150,
             position: "relative",
-            top: "60vw",
-            left: "40vw",
+            top: 150,
+            left: 100,
           }}
         >
           <View
             style={{
               backgroundColor: "yellow",
-              width: "100vw",
-              height: "100vw",
-              borderRadius: "50vw",
+              width: 150,
+              height: 150,
+              borderRadius: 75,
               position: "relative",
-              top: "60vw",
-              right: "80vw",
+              top: 250,
+              right: 100,
             }}
           ></View>
         </View>
@@ -69,10 +69,10 @@ const SignupScreen = (props) => {
       <View
         style={{
           backgroundColor: "lightblue",
-          width: "80vw",
+          width: "80%",
           alignSelf: "center",
           padding: 15,
-          marginTop: "20vh",
+          marginTop: "30%",
         }}
       >
         <Text
@@ -121,12 +121,12 @@ const SignupScreen = (props) => {
             backgroundColor: "#c4c4c4",
             padding: 10,
             textAlign: "center",
-            width: "30vw",
+            width: "30%",
             alignSelf: "center",
             margin: 10,
           }}
         >
-          <Text style={{ fontSize: 15 }}>
+          <Text style={{ fontSize: 15, textAlign: "center" }}>
             {showRegister ? "Register" : "Log in"}
           </Text>
         </TouchableOpacity>
