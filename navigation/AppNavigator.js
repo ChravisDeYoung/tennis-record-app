@@ -5,13 +5,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import NewMatchScreen from "../screens/NewMatchScreen";
+import SignupScreen from "../screens/SignupScreen";
 
 const Stack = createStackNavigator();
 
 function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Sign up">
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -47,6 +48,21 @@ function AppNavigator() {
           component={NewMatchScreen}
           options={{
             title: "New Match",
+            headerStyle: {
+              backgroundColor: "#43b599",
+            },
+            headerTintColor: "white",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+            headerTitleAlign: "center",
+          }}
+        />
+        <Stack.Screen
+          name="Sign up"
+          component={SignupScreen}
+          options={{
+            title: "Sign up",
             headerStyle: {
               backgroundColor: "#43b599",
             },
