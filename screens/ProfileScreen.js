@@ -9,9 +9,32 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-const ProfileScreen = () => {
+import { auth, firestore } from "../FirebaseConfig";
+
+const ProfileScreen = (props) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
+
+  const saveDataWithFirebase = () => {
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.uid)
+      .set(
+        {
+          name: name,
+          image: image,
+        },
+        {
+          merge: true,
+        }
+      )
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.log("Error writing document: ", error);
+      });
+  };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -103,7 +126,7 @@ const ProfileScreen = () => {
       </View>
       <TouchableOpacity
         style={{ backgroundColor: "#c4c4c4", alignSelf: "center", padding: 15 }}
-        onPress={updateProfile}
+        onPress={saveDataWithFirebase}
       >
         <Text style={{ fontSize: 15 }}>Update Profile</Text>
       </TouchableOpacity>
