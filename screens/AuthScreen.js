@@ -15,6 +15,8 @@ const AuthScreen = (props) => {
       auth
         .createUserWithEmailAndPassword(email, password)
         .then(() => {
+          setEmail("");
+          setPassword("");
           props.navigation.navigate("Profile");
         })
         .catch((error) => {
@@ -29,6 +31,8 @@ const AuthScreen = (props) => {
     auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
+        setEmail("");
+        setPassword("");
         props.navigation.navigate("Home", { userId: auth.currentUser.uid });
       })
       .catch((error) => {
