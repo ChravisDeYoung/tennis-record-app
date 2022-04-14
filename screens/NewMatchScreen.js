@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 import { auth, firestore } from "../FirebaseConfig";
 
@@ -8,6 +8,10 @@ import UserTab from "../components/UserTab";
 const NewMatchScreen = (props) => {
   const [userName, setUserName] = useState("");
   const [userImage, setUserImage] = useState("");
+  const [opponent, setOpponent] = useState("");
+  const [date, setDate] = useState("");
+  const [yourScore, setYourScore] = useState([0, 0, 0]);
+  const [theirScore, setTheirScore] = useState([0, 0, 0]);
 
   useEffect(() => retrieveDataFromFirebase(), []);
 
@@ -19,6 +23,34 @@ const NewMatchScreen = (props) => {
         setUserName(doc.data().name);
         setUserImage(doc.data().image);
       });
+  };
+
+  const saveDataWithFirebase = () => {
+    if (userName === "" || userImage === "")
+      Alert.alert("Missing image or name. Please try again.");
+    else {
+      firestore
+        .collection("users")
+        .doc(auth.currentUser.uid)
+        .collection("matches")
+        .add({
+          opponent: opponent,
+          date: date,
+          yourScore: yourScore,
+        })
+        .then(() => {
+          console.log("Document successfully written!");
+          setOpponent("");
+          setDate("");
+          setYourScore([0, 0, 0]);
+          setTheirScore([0, 0, 0]);
+          Alert.alert("Profile updated!");
+          props.navigation.navigate("Home");
+        })
+        .catch((error) => {
+          console.log("Error writing document: ", error);
+        });
+    }
   };
 
   return (
@@ -38,6 +70,8 @@ const NewMatchScreen = (props) => {
         <TextInput
           placeholder="John Doe"
           style={{ backgroundColor: "#c4c4c4", fontSize: 15, padding: 10 }}
+          onChangeText={(e) => setOpponent(e)}
+          value={opponent}
         />
       </View>
       <View style={{ paddingHorizontal: 20 }}>
@@ -47,6 +81,8 @@ const NewMatchScreen = (props) => {
         <TextInput
           placeholder="April 20, 2021"
           style={{ backgroundColor: "#c4c4c4", fontSize: 15, padding: 10 }}
+          onChangeText={(e) => setDate(e)}
+          value={date}
         />
       </View>
       <View style={{ paddingHorizontal: 20 }}>
@@ -61,6 +97,14 @@ const NewMatchScreen = (props) => {
               marginHorizontal: 10,
             }}
             placeholder="0"
+            value={yourScore[0]}
+            onChangeText={(e) =>
+              setYourScore((prev) => {
+                prev[0] = Number(e);
+                return [...prev];
+              })
+            }
+            keyboardType="numeric"
           />
           <TextInput
             style={{
@@ -69,6 +113,14 @@ const NewMatchScreen = (props) => {
               marginHorizontal: 10,
             }}
             placeholder="0"
+            value={yourScore[1]}
+            onChangeText={(e) =>
+              setYourScore((prev) => {
+                prev[1] = Number(e);
+                return [...prev];
+              })
+            }
+            keyboardType="numeric"
           />
           <TextInput
             style={{
@@ -77,6 +129,14 @@ const NewMatchScreen = (props) => {
               marginHorizontal: 10,
             }}
             placeholder="0"
+            value={yourScore[2]}
+            onChangeText={(e) =>
+              setYourScore((prev) => {
+                prev[2] = Number(e);
+                return [...prev];
+              })
+            }
+            keyboardType="numeric"
           />
         </View>
       </View>
@@ -92,6 +152,14 @@ const NewMatchScreen = (props) => {
               marginHorizontal: 10,
             }}
             placeholder="0"
+            value={theirScore[0]}
+            onChangeText={(e) =>
+              setTheirScore((prev) => {
+                prev[0] = Number(e);
+                return [...prev];
+              })
+            }
+            keyboardType="numeric"
           />
           <TextInput
             style={{
@@ -100,6 +168,14 @@ const NewMatchScreen = (props) => {
               marginHorizontal: 10,
             }}
             placeholder="0"
+            value={theirScore[0]}
+            onChangeText={(e) =>
+              setTheirScore((prev) => {
+                prev[0] = Number(e);
+                return [...prev];
+              })
+            }
+            keyboardType="numeric"
           />
           <TextInput
             style={{
@@ -108,6 +184,14 @@ const NewMatchScreen = (props) => {
               marginHorizontal: 10,
             }}
             placeholder="0"
+            value={theirScore[0]}
+            onChangeText={(e) =>
+              setTheirScore((prev) => {
+                prev[0] = Number(e);
+                return [...prev];
+              })
+            }
+            keyboardType="numeric"
           />
         </View>
       </View>
@@ -120,6 +204,7 @@ const NewMatchScreen = (props) => {
             paddingHorizontal: 20,
             margin: 15,
           }}
+          onPress={saveDataWithFirebase}
         >
           <Text style={{ fontSize: 15 }}>Finish</Text>
         </TouchableOpacity>
