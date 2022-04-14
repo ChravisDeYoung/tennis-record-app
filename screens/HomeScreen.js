@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 
+import { firestore } from "../FirebaseConfig";
+
 import UserTab from "../components/UserTab";
 import MatchSummary from "../components/MatchSummary";
 
@@ -52,15 +54,47 @@ const matches = [
 ];
 
 const HomeScreen = (props) => {
+  const [userName, setUserName] = useState("");
+  const [userImage, setUserImage] = useState("");
+
   useEffect(() => {
-    console.log(props.route.params);
+    retrieveDataFromFirebase();
   }, []);
+
+  const retrieveDataFromFirebase = () => {
+    var userId = props.route.params.userId;
+
+    // read once from data store
+    // firestore.collection("users").doc(userId).get()
+    //   .then(function (doc) {
+    //     if (doc.exists) {
+    //       setDatabaseData(doc.data().text);
+    //       console.log("Document data:", doc.data());
+    //     } else {
+    //       // doc.data() will be undefined in this case
+    //       console.log("No such document!");
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Error getting document:", error);
+    //   });
+
+    // For real-time updates:
+    firestore
+      .collection("users")
+      .doc(userId)
+      .onSnapshot((doc) => {
+        setUserName(doc.data().name);
+        setUserImage(doc.data().image);
+        console.log("Document data:", doc.data());
+      });
+  };
 
   return (
     <View>
       <UserTab
-        imageUri="https://reactnative.dev/img/tiny_logo.png"
-        username="John Doe"
+        imageUri={userImage}
+        username={userName}
         navigation={props.navigation}
       />
       <Text style={{ fontSize: 20, textAlign: "center", padding: 10 }}>
