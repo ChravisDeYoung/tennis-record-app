@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 
-import { firestore } from "../FirebaseConfig";
+import { auth, firestore } from "../FirebaseConfig";
 
 import UserTab from "../components/UserTab";
 import MatchSummary from "../components/MatchSummary";
@@ -62,7 +62,7 @@ const HomeScreen = (props) => {
   const retrieveDataFromFirebase = () => {
     firestore
       .collection("users")
-      .doc(props.route.params.userId)
+      .doc(auth.currentUser.uid)
       .onSnapshot((doc) => {
         setUserName(doc.data().name);
         setUserImage(doc.data().image);

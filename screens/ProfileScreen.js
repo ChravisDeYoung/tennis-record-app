@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Image,
   ScrollView,
   Text,
@@ -11,31 +12,37 @@ import * as ImagePicker from "expo-image-picker";
 
 import { auth, firestore } from "../FirebaseConfig";
 
-const ProfileScreen = () => {
+const ProfileScreen = (props) => {
   const [userName, setUserName] = useState("");
   const [userImage, setUserImage] = useState("");
 
   useEffect(() => retrieveDataFromFirebase(), []);
 
   const saveDataWithFirebase = () => {
-    firestore
-      .collection("users")
-      .doc(auth.currentUser.uid)
-      .set(
-        {
-          name: userName,
-          image: userImage,
-        },
-        {
-          merge: true,
-        }
-      )
-      .then(() => {
-        console.log("Document successfully written!");
-      })
-      .catch((error) => {
-        console.log("Error writing document: ", error);
-      });
+    if (userName === "" || userImage === "")
+      Alert.alert("Missing image or name. Please try again.");
+    else {
+      firestore
+        .collection("users")
+        .doc(auth.currentUser.uid)
+        .set(
+          {
+            name: userName,
+            image: userImage,
+          },
+          {
+            merge: true,
+          }
+        )
+        .then(() => {
+          console.log("Document successfully written!");
+          Alert.alert("Profile updated!");
+          props.navigation.navigate("Home");
+        })
+        .catch((error) => {
+          console.log("Error writing document: ", error);
+        });
+    }
   };
 
   const retrieveDataFromFirebase = () => {
@@ -43,8 +50,10 @@ const ProfileScreen = () => {
       .collection("users")
       .doc(auth.currentUser.uid)
       .onSnapshot((doc) => {
-        setUserName(doc.data().name || "");
-        setUserImage(doc.data().image || "");
+        if (doc.data()) {
+          setUserName(doc.data().name);
+          setUserImage(doc.data().image);
+        }
         console.log("Document data:", doc.data());
       });
   };
@@ -112,7 +121,7 @@ const ProfileScreen = () => {
           }}
         >
           <Text style={{ fontSize: 15 }}>Total Games Played:</Text>
-          <Text style={{ fontSize: 15 }}>20</Text>
+          <Text style={{ fontSize: 15 }}>0</Text>
         </View>
         <View
           style={{
@@ -121,7 +130,7 @@ const ProfileScreen = () => {
           }}
         >
           <Text style={{ fontSize: 15 }}>Total Games Won:</Text>
-          <Text style={{ fontSize: 15 }}>16</Text>
+          <Text style={{ fontSize: 15 }}>0</Text>
         </View>
         <View
           style={{
@@ -131,7 +140,7 @@ const ProfileScreen = () => {
           }}
         >
           <Text style={{ fontSize: 15 }}>Total Games Lost:</Text>
-          <Text style={{ fontSize: 15 }}>4</Text>
+          <Text style={{ fontSize: 15 }}>0</Text>
         </View>
       </View>
       <TouchableOpacity
