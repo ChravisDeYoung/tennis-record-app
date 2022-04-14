@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import { auth, firestore } from "../FirebaseConfig";
 
@@ -37,6 +45,7 @@ const NewMatchScreen = (props) => {
           opponent: opponent,
           date: date,
           yourScore: yourScore,
+          theirScore: theirScore,
         })
         .then(() => {
           console.log("Document successfully written!");
@@ -44,7 +53,7 @@ const NewMatchScreen = (props) => {
           setDate("");
           setYourScore([0, 0, 0]);
           setTheirScore([0, 0, 0]);
-          Alert.alert("Profile updated!");
+          Alert.alert("Match Added!");
           props.navigation.navigate("Home");
         })
         .catch((error) => {
@@ -54,174 +63,171 @@ const NewMatchScreen = (props) => {
   };
 
   return (
-    <View>
+    <KeyboardAvoidingView>
       <UserTab
-        imageUri={userImage}
+        imageUri={userImage === "" ? null : userImage}
         username={userName}
         navigation={props.navigation}
       />
       <Text style={{ fontSize: 20, textAlign: "center", marginTop: 20 }}>
         New Match
       </Text>
-      <View style={{ paddingHorizontal: 20 }}>
-        <Text style={{ fontSize: 15, paddingBottom: 10, paddingTop: 20 }}>
-          Against
-        </Text>
-        <TextInput
-          placeholder="John Doe"
-          style={{ backgroundColor: "#c4c4c4", fontSize: 15, padding: 10 }}
-          onChangeText={(e) => setOpponent(e)}
-          value={opponent}
-        />
-      </View>
-      <View style={{ paddingHorizontal: 20 }}>
-        <Text style={{ fontSize: 15, paddingBottom: 10, paddingTop: 20 }}>
-          Date
-        </Text>
-        <TextInput
-          placeholder="April 20, 2021"
-          style={{ backgroundColor: "#c4c4c4", fontSize: 15, padding: 10 }}
-          onChangeText={(e) => setDate(e)}
-          value={date}
-        />
-      </View>
-      <View style={{ paddingHorizontal: 20 }}>
-        <Text style={{ fontSize: 15, paddingBottom: 10, paddingTop: 20 }}>
-          Your Score
-        </Text>
-        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+      <ScrollView>
+        <View style={{ paddingHorizontal: 20 }}>
+          <Text style={{ fontSize: 15, paddingBottom: 10, paddingTop: 20 }}>
+            Against
+          </Text>
           <TextInput
-            style={{
-              backgroundColor: "#c4c4c4",
-              padding: 10,
-              marginHorizontal: 10,
-            }}
-            placeholder="0"
-            value={yourScore[0]}
-            onChangeText={(e) =>
-              setYourScore((prev) => {
-                prev[0] = Number(e);
-                return [...prev];
-              })
-            }
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={{
-              backgroundColor: "#c4c4c4",
-              padding: 10,
-              marginHorizontal: 10,
-            }}
-            placeholder="0"
-            value={yourScore[1]}
-            onChangeText={(e) =>
-              setYourScore((prev) => {
-                prev[1] = Number(e);
-                return [...prev];
-              })
-            }
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={{
-              backgroundColor: "#c4c4c4",
-              padding: 10,
-              marginHorizontal: 10,
-            }}
-            placeholder="0"
-            value={yourScore[2]}
-            onChangeText={(e) =>
-              setYourScore((prev) => {
-                prev[2] = Number(e);
-                return [...prev];
-              })
-            }
-            keyboardType="numeric"
+            placeholder="John Doe"
+            style={{ backgroundColor: "#c4c4c4", fontSize: 15, padding: 10 }}
+            onChangeText={(e) => setOpponent(e)}
+            value={opponent}
           />
         </View>
-      </View>
-      <View style={{ paddingHorizontal: 20 }}>
-        <Text style={{ fontSize: 15, paddingBottom: 10, paddingTop: 20 }}>
-          Their Score
-        </Text>
-        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+        <View style={{ paddingHorizontal: 20 }}>
+          <Text style={{ fontSize: 15, paddingBottom: 10, paddingTop: 20 }}>
+            Date
+          </Text>
           <TextInput
-            style={{
-              backgroundColor: "#c4c4c4",
-              padding: 10,
-              marginHorizontal: 10,
-            }}
-            placeholder="0"
-            value={theirScore[0]}
-            onChangeText={(e) =>
-              setTheirScore((prev) => {
-                prev[0] = Number(e);
-                return [...prev];
-              })
-            }
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={{
-              backgroundColor: "#c4c4c4",
-              padding: 10,
-              marginHorizontal: 10,
-            }}
-            placeholder="0"
-            value={theirScore[0]}
-            onChangeText={(e) =>
-              setTheirScore((prev) => {
-                prev[0] = Number(e);
-                return [...prev];
-              })
-            }
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={{
-              backgroundColor: "#c4c4c4",
-              padding: 10,
-              marginHorizontal: 10,
-            }}
-            placeholder="0"
-            value={theirScore[0]}
-            onChangeText={(e) =>
-              setTheirScore((prev) => {
-                prev[0] = Number(e);
-                return [...prev];
-              })
-            }
-            keyboardType="numeric"
+            placeholder="April 20, 2021"
+            style={{ backgroundColor: "#c4c4c4", fontSize: 15, padding: 10 }}
+            onChangeText={(e) => setDate(e)}
+            value={date}
           />
         </View>
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "center" }}>
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#c4c4c4",
-            alignSelf: "center",
-            paddingVertical: 10,
-            paddingHorizontal: 20,
-            margin: 15,
-          }}
-          onPress={saveDataWithFirebase}
-        >
-          <Text style={{ fontSize: 15 }}>Finish</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#c4c4c4",
-            alignSelf: "center",
-            paddingVertical: 10,
-            paddingHorizontal: 20,
-            margin: 15,
-          }}
-          onPress={() => props.navigation.goBack()}
-        >
-          <Text style={{ fontSize: 15 }}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+        <View style={{ paddingHorizontal: 20 }}>
+          <Text style={{ fontSize: 15, paddingBottom: 10, paddingTop: 20 }}>
+            Your Score
+          </Text>
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <TextInput
+              style={{
+                backgroundColor: "#c4c4c4",
+                padding: 10,
+                marginHorizontal: 10,
+              }}
+              placeholder="0"
+              onChangeText={(e) =>
+                setYourScore((prev) => {
+                  prev[0] = Number(e);
+                  return [...prev];
+                })
+              }
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={{
+                backgroundColor: "#c4c4c4",
+                padding: 10,
+                marginHorizontal: 10,
+              }}
+              placeholder="0"
+              onChangeText={(e) =>
+                setYourScore((prev) => {
+                  prev[1] = Number(e);
+                  return [...prev];
+                })
+              }
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={{
+                backgroundColor: "#c4c4c4",
+                padding: 10,
+                marginHorizontal: 10,
+              }}
+              placeholder="0"
+              onChangeText={(e) =>
+                setYourScore((prev) => {
+                  prev[2] = Number(e);
+                  return [...prev];
+                })
+              }
+              keyboardType="numeric"
+            />
+          </View>
+        </View>
+        <View style={{ paddingHorizontal: 20 }}>
+          <Text style={{ fontSize: 15, paddingBottom: 10, paddingTop: 20 }}>
+            Their Score
+          </Text>
+          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <TextInput
+              style={{
+                backgroundColor: "#c4c4c4",
+                padding: 10,
+                marginHorizontal: 10,
+              }}
+              placeholder="0"
+              onChangeText={(e) =>
+                setTheirScore((prev) => {
+                  prev[0] = Number(e);
+                  return [...prev];
+                })
+              }
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={{
+                backgroundColor: "#c4c4c4",
+                padding: 10,
+                marginHorizontal: 10,
+              }}
+              placeholder="0"
+              onChangeText={(e) =>
+                setTheirScore((prev) => {
+                  prev[0] = Number(e);
+                  return [...prev];
+                })
+              }
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={{
+                backgroundColor: "#c4c4c4",
+                padding: 10,
+                marginHorizontal: 10,
+              }}
+              placeholder="0"
+              onChangeText={(e) =>
+                setTheirScore((prev) => {
+                  prev[0] = Number(e);
+                  return [...prev];
+                })
+              }
+              keyboardType="numeric"
+            />
+          </View>
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#c4c4c4",
+              alignSelf: "center",
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              margin: 15,
+            }}
+            onPress={saveDataWithFirebase}
+          >
+            <Text style={{ fontSize: 15 }}>Finish</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#c4c4c4",
+              alignSelf: "center",
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              margin: 15,
+            }}
+            onPress={() => props.navigation.goBack()}
+          >
+            <Text style={{ fontSize: 15 }}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ height: 1000 }}></View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
