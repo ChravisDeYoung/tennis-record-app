@@ -54,7 +54,6 @@ const ProfileScreen = (props) => {
           setUserName(doc.data().name);
           setUserImage(doc.data().image);
         }
-        console.log("Document data:", doc.data());
       });
   };
 

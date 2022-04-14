@@ -18,7 +18,6 @@ const NewMatchScreen = (props) => {
       .onSnapshot((doc) => {
         setUserName(doc.data().name);
         setUserImage(doc.data().image);
-        console.log("Document data:", doc.data());
       });
   };
 
