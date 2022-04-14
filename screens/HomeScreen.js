@@ -57,7 +57,7 @@ const HomeScreen = (props) => {
   const [userName, setUserName] = useState("");
   const [userImage, setUserImage] = useState("");
 
-  useEffect(() => retrieveDataFromFirebase(), []);
+  useEffect(() => retrieveDataFromFirebase(), [props]);
 
   const retrieveDataFromFirebase = () => {
     firestore
