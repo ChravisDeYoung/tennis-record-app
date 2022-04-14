@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -14,6 +14,8 @@ import { auth, firestore } from "../FirebaseConfig";
 const ProfileScreen = (props) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
+
+  useEffect(() => retrieveDataFromFirebase(), []);
 
   const saveDataWithFirebase = () => {
     firestore
@@ -36,6 +38,25 @@ const ProfileScreen = (props) => {
       });
   };
 
+  const retrieveDataFromFirebase = () => {
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.uid)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setName(doc.data().name);
+          setImage(doc.data().image);
+          console.log(doc.data());
+        } else {
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  };
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -47,10 +68,6 @@ const ProfileScreen = (props) => {
     if (!result.cancelled) {
       setImage(result.uri);
     }
-  };
-
-  const updateProfile = () => {
-    console.log("updated!");
   };
 
   return (
@@ -82,6 +99,7 @@ const ProfileScreen = (props) => {
       </TouchableOpacity>
       <TextInput
         placeholder="name"
+        value={name}
         style={{
           backgroundColor: "#c4c4c4",
           margin: 30,

@@ -1,6 +1,7 @@
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+
 import { auth } from "../FirebaseConfig";
 
 const UserTab = (props) => {
