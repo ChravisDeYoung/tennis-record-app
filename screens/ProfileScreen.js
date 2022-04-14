@@ -11,9 +11,9 @@ import * as ImagePicker from "expo-image-picker";
 
 import { auth, firestore } from "../FirebaseConfig";
 
-const ProfileScreen = (props) => {
-  const [name, setName] = useState("");
-  const [image, setImage] = useState(null);
+const ProfileScreen = () => {
+  const [userName, setUserName] = useState("");
+  const [userImage, setUserImage] = useState("");
 
   useEffect(() => retrieveDataFromFirebase(), []);
 
@@ -23,8 +23,8 @@ const ProfileScreen = (props) => {
       .doc(auth.currentUser.uid)
       .set(
         {
-          name: name,
-          image: image,
+          name: userName,
+          image: userImage,
         },
         {
           merge: true,
@@ -42,18 +42,10 @@ const ProfileScreen = (props) => {
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          setName(doc.data().name);
-          setImage(doc.data().image);
-          console.log(doc.data());
-        } else {
-          console.log("No such document!");
-        }
-      })
-      .catch((error) => {
-        console.log("Error getting document:", error);
+      .onSnapshot((doc) => {
+        setUserName(doc.data().name);
+        setUserImage(doc.data().image);
+        console.log("Document data:", doc.data());
       });
   };
 
@@ -66,7 +58,7 @@ const ProfileScreen = (props) => {
     });
 
     if (!result.cancelled) {
-      setImage(result.uri);
+      setUserImage(result.uri);
     }
   };
 
@@ -86,9 +78,9 @@ const ProfileScreen = (props) => {
         }}
         onPress={pickImage}
       >
-        {image ? (
+        {userImage ? (
           <Image
-            source={{ uri: image }}
+            source={{ uri: userImage }}
             style={{ width: "100%", height: "100%" }}
           />
         ) : (
@@ -99,7 +91,7 @@ const ProfileScreen = (props) => {
       </TouchableOpacity>
       <TextInput
         placeholder="name"
-        value={name}
+        value={userName}
         style={{
           backgroundColor: "#c4c4c4",
           margin: 30,
@@ -108,7 +100,7 @@ const ProfileScreen = (props) => {
           textAlign: "center",
           fontWeight: "bold",
         }}
-        onChangeText={(e) => setName(e)}
+        onChangeText={(e) => setUserName(e)}
       ></TextInput>
       <View style={{ paddingHorizontal: 30, paddingBottom: 10 }}>
         <Text style={{ fontSize: 20, alignSelf: "center" }}>Stats</Text>

@@ -1,14 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
+
+import { auth, firestore } from "../FirebaseConfig";
 
 import UserTab from "../components/UserTab";
 
 const NewMatchScreen = (props) => {
+  const [userName, setUserName] = useState("");
+  const [userImage, setUserImage] = useState("");
+
+  useEffect(() => retrieveDataFromFirebase(), []);
+
+  const retrieveDataFromFirebase = () => {
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.uid)
+      .onSnapshot((doc) => {
+        setUserName(doc.data().name);
+        setUserImage(doc.data().image);
+        console.log("Document data:", doc.data());
+      });
+  };
+
   return (
     <View>
       <UserTab
-        imageUri="https://reactnative.dev/img/tiny_logo.png"
-        username="John Doe"
+        imageUri={userImage}
+        username={userName}
         navigation={props.navigation}
       />
       <Text style={{ fontSize: 20, textAlign: "center", marginTop: 20 }}>

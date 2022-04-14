@@ -57,36 +57,15 @@ const HomeScreen = (props) => {
   const [userName, setUserName] = useState("");
   const [userImage, setUserImage] = useState("");
 
-  useEffect(() => {
-    retrieveDataFromFirebase();
-  }, []);
+  useEffect(() => retrieveDataFromFirebase(), []);
 
   const retrieveDataFromFirebase = () => {
-    var userId = props.route.params.userId;
-
-    // read once from data store
-    // firestore.collection("users").doc(userId).get()
-    //   .then(function (doc) {
-    //     if (doc.exists) {
-    //       setDatabaseData(doc.data().text);
-    //       console.log("Document data:", doc.data());
-    //     } else {
-    //       // doc.data() will be undefined in this case
-    //       console.log("No such document!");
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Error getting document:", error);
-    //   });
-
-    // For real-time updates:
     firestore
       .collection("users")
-      .doc(userId)
+      .doc(props.route.params.userId)
       .onSnapshot((doc) => {
         setUserName(doc.data().name);
         setUserImage(doc.data().image);
-        console.log("Document data:", doc.data());
       });
   };
 
