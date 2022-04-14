@@ -6,56 +6,57 @@ import { auth, firestore } from "../FirebaseConfig";
 import UserTab from "../components/UserTab";
 import MatchSummary from "../components/MatchSummary";
 
-const matches = [
-  {
-    date: "February 3",
-    location: "Dorchester, ON",
-    status: "Loss",
-    opponent: {
-      name: "Jane Doe",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    home: [6, 5, 2],
-    away: [3, 7, 6],
-  },
-  {
-    date: "March 23",
-    location: "London, ON",
-    status: "Win",
-    opponent: {
-      name: "Saul Goodman",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    home: [6, 4, 6],
-    away: [4, 6, 2],
-  },
-  {
-    date: "February 3",
-    location: "Dorchester, ON",
-    status: "Loss",
-    opponent: {
-      name: "Jane Doe",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    home: [6, 5, 2],
-    away: [3, 7, 6],
-  },
-  {
-    date: "March 23",
-    location: "London, ON",
-    status: "Win",
-    opponent: {
-      name: "Saul Goodman",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    home: [6, 4, 6],
-    away: [4, 6, 2],
-  },
-];
+// const matches = [
+//   {
+//     date: "February 3",
+//     location: "Dorchester, ON",
+//     status: "Loss",
+//     opponent: {
+//       name: "Jane Doe",
+//       image: "https://reactnative.dev/img/tiny_logo.png",
+//     },
+//     home: [6, 5, 2],
+//     away: [3, 7, 6],
+//   },
+//   {
+//     date: "March 23",
+//     location: "London, ON",
+//     status: "Win",
+//     opponent: {
+//       name: "Saul Goodman",
+//       image: "https://reactnative.dev/img/tiny_logo.png",
+//     },
+//     home: [6, 4, 6],
+//     away: [4, 6, 2],
+//   },
+//   {
+//     date: "February 3",
+//     location: "Dorchester, ON",
+//     status: "Loss",
+//     opponent: {
+//       name: "Jane Doe",
+//       image: "https://reactnative.dev/img/tiny_logo.png",
+//     },
+//     home: [6, 5, 2],
+//     away: [3, 7, 6],
+//   },
+//   {
+//     date: "March 23",
+//     location: "London, ON",
+//     status: "Win",
+//     opponent: {
+//       name: "Saul Goodman",
+//       image: "https://reactnative.dev/img/tiny_logo.png",
+//     },
+//     home: [6, 4, 6],
+//     away: [4, 6, 2],
+//   },
+// ];
 
 const HomeScreen = (props) => {
   const [userName, setUserName] = useState("");
   const [userImage, setUserImage] = useState("");
+  const [matches, setMatches] = useState([]);
 
   useEffect(() => retrieveDataFromFirebase(), [props]);
 
@@ -67,12 +68,35 @@ const HomeScreen = (props) => {
         setUserName(doc.data().name);
         setUserImage(doc.data().image);
       });
+
+    firestore
+      .collection(`users/${auth.currentUser.uid}/matches`)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.docs.forEach((doc) => {
+          console.log(doc.data());
+          setMatches((prev) => [
+            ...prev,
+            {
+              opponent: doc.data().opponent,
+              date: doc.data().date,
+              yourScore: doc.data().yourScore,
+              theirScore: doc.data().theirScore,
+              status:
+                doc.data().yourScore.reduce((parSum, a) => parSum + a, 0) >
+                doc.data().theirScore.reduce((parSum, a) => parSum + a, 0)
+                  ? "Win"
+                  : "Loss",
+            },
+          ]);
+        });
+      });
   };
 
   return (
     <View>
       <UserTab
-        imageUri={userImage}
+        imageUri={userImage === "" ? null : userImage}
         username={userName}
         navigation={props.navigation}
       />
@@ -93,7 +117,7 @@ const HomeScreen = (props) => {
       </TouchableOpacity>
       <ScrollView style={{ height: "65%" }}>
         {matches.map((match, index) => (
-          <MatchSummary match={match} key={index} />
+          <MatchSummary match={match} key={index} user={userName} />
         ))}
       </ScrollView>
     </View>
