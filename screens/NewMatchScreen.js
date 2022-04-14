@@ -111,17 +111,31 @@ const NewMatchScreen = (props) => {
           />
         </View>
       </View>
-      <TouchableOpacity
-        style={{
-          backgroundColor: "#c4c4c4",
-          alignSelf: "center",
-          paddingVertical: 10,
-          paddingHorizontal: 20,
-          margin: 15,
-        }}
-      >
-        <Text style={{ fontSize: 15 }}>Finish</Text>
-      </TouchableOpacity>
+      <View style={{ flexDirection: "row", justifyContent: "center" }}>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#c4c4c4",
+            alignSelf: "center",
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            margin: 15,
+          }}
+        >
+          <Text style={{ fontSize: 15 }}>Finish</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#c4c4c4",
+            alignSelf: "center",
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            margin: 15,
+          }}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Text style={{ fontSize: 15 }}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

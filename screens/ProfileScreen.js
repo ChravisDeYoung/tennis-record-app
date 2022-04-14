@@ -142,12 +142,30 @@ const ProfileScreen = (props) => {
           <Text style={{ fontSize: 15 }}>0</Text>
         </View>
       </View>
-      <TouchableOpacity
-        style={{ backgroundColor: "#c4c4c4", alignSelf: "center", padding: 15 }}
-        onPress={saveDataWithFirebase}
-      >
-        <Text style={{ fontSize: 15 }}>Update Profile</Text>
-      </TouchableOpacity>
+      <View style={{ flexDirection: "row", justifyContent: "center" }}>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#c4c4c4",
+            alignSelf: "center",
+            padding: 15,
+            marginHorizontal: 10,
+          }}
+          onPress={saveDataWithFirebase}
+        >
+          <Text style={{ fontSize: 15 }}>Update Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#c4c4c4",
+            alignSelf: "center",
+            padding: 15,
+            marginHorizontal: 10,
+          }}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Text style={{ fontSize: 15 }}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };
