@@ -6,59 +6,15 @@ import { auth, firestore } from "../FirebaseConfig";
 import UserTab from "../components/UserTab";
 import MatchSummary from "../components/MatchSummary";
 
-// const matches = [
-//   {
-//     date: "February 3",
-//     location: "Dorchester, ON",
-//     status: "Loss",
-//     opponent: {
-//       name: "Jane Doe",
-//       image: "https://reactnative.dev/img/tiny_logo.png",
-//     },
-//     home: [6, 5, 2],
-//     away: [3, 7, 6],
-//   },
-//   {
-//     date: "March 23",
-//     location: "London, ON",
-//     status: "Win",
-//     opponent: {
-//       name: "Saul Goodman",
-//       image: "https://reactnative.dev/img/tiny_logo.png",
-//     },
-//     home: [6, 4, 6],
-//     away: [4, 6, 2],
-//   },
-//   {
-//     date: "February 3",
-//     location: "Dorchester, ON",
-//     status: "Loss",
-//     opponent: {
-//       name: "Jane Doe",
-//       image: "https://reactnative.dev/img/tiny_logo.png",
-//     },
-//     home: [6, 5, 2],
-//     away: [3, 7, 6],
-//   },
-//   {
-//     date: "March 23",
-//     location: "London, ON",
-//     status: "Win",
-//     opponent: {
-//       name: "Saul Goodman",
-//       image: "https://reactnative.dev/img/tiny_logo.png",
-//     },
-//     home: [6, 4, 6],
-//     away: [4, 6, 2],
-//   },
-// ];
-
 const HomeScreen = (props) => {
   const [userName, setUserName] = useState("");
   const [userImage, setUserImage] = useState("");
   const [matches, setMatches] = useState([]);
 
-  useEffect(() => retrieveDataFromFirebase(), [props]);
+  useEffect(() => {
+    setMatches([]);
+    retrieveDataFromFirebase();
+  }, [props]);
 
   const retrieveDataFromFirebase = () => {
     firestore
@@ -74,7 +30,6 @@ const HomeScreen = (props) => {
       .get()
       .then((querySnapshot) => {
         querySnapshot.docs.forEach((doc) => {
-          console.log(doc.data());
           setMatches((prev) => [
             ...prev,
             {
