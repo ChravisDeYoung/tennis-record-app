@@ -43,8 +43,8 @@ const ProfileScreen = () => {
       .collection("users")
       .doc(auth.currentUser.uid)
       .onSnapshot((doc) => {
-        setUserName(doc.data().name);
-        setUserImage(doc.data().image);
+        setUserName(doc.data().name || "");
+        setUserImage(doc.data().image || "");
         console.log("Document data:", doc.data());
       });
   };
