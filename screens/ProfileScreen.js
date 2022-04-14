@@ -15,6 +15,8 @@ import { auth, firestore } from "../FirebaseConfig";
 const ProfileScreen = (props) => {
   const [userName, setUserName] = useState("");
   const [userImage, setUserImage] = useState("");
+  const [wins, setWins] = useState(0);
+  const [losses, setLosses] = useState(0);
 
   useEffect(() => retrieveDataFromFirebase(), []);
 
@@ -54,6 +56,20 @@ const ProfileScreen = (props) => {
           setUserName(doc.data().name);
           setUserImage(doc.data().image);
         }
+      });
+
+    firestore
+      .collection(`users/${auth.currentUser.uid}/matches`)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.docs.forEach((doc) => {
+          if (
+            doc.data().yourScore.reduce((parSum, a) => parSum + a, 0) >
+            doc.data().theirScore.reduce((parSum, a) => parSum + a, 0)
+          )
+            setWins((prev) => prev + 1);
+          else setLosses((prev) => prev + 1);
+        });
       });
   };
 
@@ -120,7 +136,7 @@ const ProfileScreen = (props) => {
           }}
         >
           <Text style={{ fontSize: 15 }}>Total Games Played:</Text>
-          <Text style={{ fontSize: 15 }}>0</Text>
+          <Text style={{ fontSize: 15 }}>{losses}</Text>
         </View>
         <View
           style={{
@@ -129,7 +145,7 @@ const ProfileScreen = (props) => {
           }}
         >
           <Text style={{ fontSize: 15 }}>Total Games Won:</Text>
-          <Text style={{ fontSize: 15 }}>0</Text>
+          <Text style={{ fontSize: 15 }}>{wins}</Text>
         </View>
         <View
           style={{
@@ -139,7 +155,7 @@ const ProfileScreen = (props) => {
           }}
         >
           <Text style={{ fontSize: 15 }}>Total Games Lost:</Text>
-          <Text style={{ fontSize: 15 }}>0</Text>
+          <Text style={{ fontSize: 15 }}>{wins + losses}</Text>
         </View>
       </View>
       <View style={{ flexDirection: "row", justifyContent: "center" }}>
