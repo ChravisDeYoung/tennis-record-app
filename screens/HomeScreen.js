@@ -12,7 +12,6 @@ const HomeScreen = (props) => {
   const [matches, setMatches] = useState([]);
 
   useEffect(() => {
-    setMatches([]);
     retrieveDataFromFirebase();
   }, [props]);
 
@@ -25,6 +24,7 @@ const HomeScreen = (props) => {
         setUserImage(doc.data().image);
       });
 
+    setMatches([]);
     firestore
       .collection(`users/${auth.currentUser.uid}/matches`)
       .get()

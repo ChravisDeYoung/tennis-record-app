@@ -176,7 +176,7 @@ const NewMatchScreen = (props) => {
               placeholder="0"
               onChangeText={(e) =>
                 setTheirScore((prev) => {
-                  prev[0] = Number(e);
+                  prev[1] = Number(e);
                   return [...prev];
                 })
               }
@@ -191,7 +191,7 @@ const NewMatchScreen = (props) => {
               placeholder="0"
               onChangeText={(e) =>
                 setTheirScore((prev) => {
-                  prev[0] = Number(e);
+                  prev[2] = Number(e);
                   return [...prev];
                 })
               }
