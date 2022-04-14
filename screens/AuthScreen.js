@@ -44,42 +44,44 @@ const AuthScreen = (props) => {
     <View style={{ height: "100%", overflow: "hidden" }}>
       <View
         style={{
-          backgroundColor: "lightpink",
+          backgroundColor: "#dbfc53",
           width: 200,
           height: 200,
           borderRadius: 100,
           position: "absolute",
-          left: -10,
-          top: -10,
+          left: "10%",
+          top: "10%",
+          overflow: "hidden",
         }}
       >
         <View
           style={{
-            backgroundColor: "lightgreen",
-            width: 300,
-            height: 300,
-            borderRadius: 150,
             position: "relative",
-            top: 150,
-            left: 100,
+            width: 200,
+            height: 200,
+            left: 125,
+            borderRadius: 100,
+            borderColor: "white",
+            borderWidth: 5,
           }}
         >
           <View
             style={{
-              backgroundColor: "yellow",
-              width: 150,
-              height: 150,
-              borderRadius: 75,
               position: "relative",
-              top: 250,
-              right: 100,
+              width: 200,
+              height: 200,
+              top: -5,
+              left: -255,
+              borderRadius: 100,
+              borderColor: "white",
+              borderWidth: 5,
             }}
           ></View>
         </View>
       </View>
       <View
         style={{
-          backgroundColor: "lightblue",
+          backgroundColor: "#1985ff",
           width: "80%",
           alignSelf: "center",
           padding: 15,
@@ -92,6 +94,7 @@ const AuthScreen = (props) => {
             fontWeight: "bold",
             textAlign: "center",
             marginBottom: 10,
+            color: "white",
           }}
         >
           {showRegister ? "Sign up" : "Welcome back"}
@@ -137,7 +140,7 @@ const AuthScreen = (props) => {
         <TouchableOpacity
           onPress={showRegister ? registerWithFirebase : loginWithFirebase}
           style={{
-            backgroundColor: "#c4c4c4",
+            backgroundColor: "white",
             padding: 10,
             textAlign: "center",
             width: "30%",
@@ -145,7 +148,14 @@ const AuthScreen = (props) => {
             margin: 10,
           }}
         >
-          <Text style={{ fontSize: 15, textAlign: "center" }}>
+          <Text
+            style={{
+              fontSize: 15,
+              textAlign: "center",
+              color: "#1985ff",
+              fontWeight: "bold",
+            }}
+          >
             {showRegister ? "Register" : "Log in"}
           </Text>
         </TouchableOpacity>
