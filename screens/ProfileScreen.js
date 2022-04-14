@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -9,9 +9,53 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-const ProfileScreen = () => {
+import { auth, firestore } from "../FirebaseConfig";
+
+const ProfileScreen = (props) => {
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
+
+  useEffect(() => retrieveDataFromFirebase(), []);
+
+  const saveDataWithFirebase = () => {
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.uid)
+      .set(
+        {
+          name: name,
+          image: image,
+        },
+        {
+          merge: true,
+        }
+      )
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.log("Error writing document: ", error);
+      });
+  };
+
+  const retrieveDataFromFirebase = () => {
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.uid)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setName(doc.data().name);
+          setImage(doc.data().image);
+          console.log(doc.data());
+        } else {
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -24,10 +68,6 @@ const ProfileScreen = () => {
     if (!result.cancelled) {
       setImage(result.uri);
     }
-  };
-
-  const updateProfile = () => {
-    console.log("updated!");
   };
 
   return (
@@ -59,6 +99,7 @@ const ProfileScreen = () => {
       </TouchableOpacity>
       <TextInput
         placeholder="name"
+        value={name}
         style={{
           backgroundColor: "#c4c4c4",
           margin: 30,
@@ -103,7 +144,7 @@ const ProfileScreen = () => {
       </View>
       <TouchableOpacity
         style={{ backgroundColor: "#c4c4c4", alignSelf: "center", padding: 15 }}
-        onPress={updateProfile}
+        onPress={saveDataWithFirebase}
       >
         <Text style={{ fontSize: 15 }}>Update Profile</Text>
       </TouchableOpacity>

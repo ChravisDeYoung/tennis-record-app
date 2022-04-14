@@ -24,7 +24,7 @@ const SignupScreen = (props) => {
     auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        props.navigation.navigate("Home");
+        props.navigation.navigate("Home", { userId: auth.currentUser.uid });
       })
       .catch((error) => console.log(error));
   };
