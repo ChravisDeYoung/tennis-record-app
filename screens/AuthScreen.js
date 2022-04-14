@@ -3,7 +3,7 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 import { auth } from "../FirebaseConfig";
 
-const SignupScreen = (props) => {
+const AuthScreen = (props) => {
   const [showRegister, setShowRegister] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -144,4 +144,4 @@ const SignupScreen = (props) => {
   );
 };
 
-export default SignupScreen;
+export default AuthScreen;

@@ -5,14 +5,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import NewMatchScreen from "../screens/NewMatchScreen";
-import SignupScreen from "../screens/SignupScreen";
+import AuthScreen from "../screens/AuthScreen";
 
 const Stack = createStackNavigator();
 
 function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Authorization">
+      <Stack.Navigator initialRouteName="Auth">
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -59,10 +59,10 @@ function AppNavigator() {
           }}
         />
         <Stack.Screen
-          name="Authorization"
-          component={SignupScreen}
+          name="Auth"
+          component={AuthScreen}
           options={{
-            title: "Authorization",
+            title: "Auth",
             headerStyle: {
               backgroundColor: "#43b599",
             },
