@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Image,
   ScrollView,
   Text,
@@ -12,48 +13,47 @@ import * as ImagePicker from "expo-image-picker";
 import { auth, firestore } from "../FirebaseConfig";
 
 const ProfileScreen = (props) => {
-  const [name, setName] = useState("");
-  const [image, setImage] = useState(null);
+  const [userName, setUserName] = useState("");
+  const [userImage, setUserImage] = useState("");
 
   useEffect(() => retrieveDataFromFirebase(), []);
 
   const saveDataWithFirebase = () => {
-    firestore
-      .collection("users")
-      .doc(auth.currentUser.uid)
-      .set(
-        {
-          name: name,
-          image: image,
-        },
-        {
-          merge: true,
-        }
-      )
-      .then(() => {
-        console.log("Document successfully written!");
-      })
-      .catch((error) => {
-        console.log("Error writing document: ", error);
-      });
+    if (userName === "" || userImage === "")
+      Alert.alert("Missing image or name. Please try again.");
+    else {
+      firestore
+        .collection("users")
+        .doc(auth.currentUser.uid)
+        .set(
+          {
+            name: userName,
+            image: userImage,
+          },
+          {
+            merge: true,
+          }
+        )
+        .then(() => {
+          console.log("Document successfully written!");
+          Alert.alert("Profile updated!");
+          props.navigation.navigate("Home");
+        })
+        .catch((error) => {
+          console.log("Error writing document: ", error);
+        });
+    }
   };
 
   const retrieveDataFromFirebase = () => {
     firestore
       .collection("users")
       .doc(auth.currentUser.uid)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          setName(doc.data().name);
-          setImage(doc.data().image);
-          console.log(doc.data());
-        } else {
-          console.log("No such document!");
+      .onSnapshot((doc) => {
+        if (doc.data()) {
+          setUserName(doc.data().name);
+          setUserImage(doc.data().image);
         }
-      })
-      .catch((error) => {
-        console.log("Error getting document:", error);
       });
   };
 
@@ -66,7 +66,7 @@ const ProfileScreen = (props) => {
     });
 
     if (!result.cancelled) {
-      setImage(result.uri);
+      setUserImage(result.uri);
     }
   };
 
@@ -86,9 +86,9 @@ const ProfileScreen = (props) => {
         }}
         onPress={pickImage}
       >
-        {image ? (
+        {userImage ? (
           <Image
-            source={{ uri: image }}
+            source={{ uri: userImage }}
             style={{ width: "100%", height: "100%" }}
           />
         ) : (
@@ -99,7 +99,7 @@ const ProfileScreen = (props) => {
       </TouchableOpacity>
       <TextInput
         placeholder="name"
-        value={name}
+        value={userName}
         style={{
           backgroundColor: "#c4c4c4",
           margin: 30,
@@ -108,7 +108,7 @@ const ProfileScreen = (props) => {
           textAlign: "center",
           fontWeight: "bold",
         }}
-        onChangeText={(e) => setName(e)}
+        onChangeText={(e) => setUserName(e)}
       ></TextInput>
       <View style={{ paddingHorizontal: 30, paddingBottom: 10 }}>
         <Text style={{ fontSize: 20, alignSelf: "center" }}>Stats</Text>
@@ -120,7 +120,7 @@ const ProfileScreen = (props) => {
           }}
         >
           <Text style={{ fontSize: 15 }}>Total Games Played:</Text>
-          <Text style={{ fontSize: 15 }}>20</Text>
+          <Text style={{ fontSize: 15 }}>0</Text>
         </View>
         <View
           style={{
@@ -129,7 +129,7 @@ const ProfileScreen = (props) => {
           }}
         >
           <Text style={{ fontSize: 15 }}>Total Games Won:</Text>
-          <Text style={{ fontSize: 15 }}>16</Text>
+          <Text style={{ fontSize: 15 }}>0</Text>
         </View>
         <View
           style={{
@@ -139,15 +139,33 @@ const ProfileScreen = (props) => {
           }}
         >
           <Text style={{ fontSize: 15 }}>Total Games Lost:</Text>
-          <Text style={{ fontSize: 15 }}>4</Text>
+          <Text style={{ fontSize: 15 }}>0</Text>
         </View>
       </View>
-      <TouchableOpacity
-        style={{ backgroundColor: "#c4c4c4", alignSelf: "center", padding: 15 }}
-        onPress={saveDataWithFirebase}
-      >
-        <Text style={{ fontSize: 15 }}>Update Profile</Text>
-      </TouchableOpacity>
+      <View style={{ flexDirection: "row", justifyContent: "center" }}>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#c4c4c4",
+            alignSelf: "center",
+            padding: 15,
+            marginHorizontal: 10,
+          }}
+          onPress={saveDataWithFirebase}
+        >
+          <Text style={{ fontSize: 15 }}>Update Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#c4c4c4",
+            alignSelf: "center",
+            padding: 15,
+            marginHorizontal: 10,
+          }}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Text style={{ fontSize: 15 }}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };

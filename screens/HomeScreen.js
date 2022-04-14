@@ -1,99 +1,102 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 
-import { firestore } from "../FirebaseConfig";
+import { auth, firestore } from "../FirebaseConfig";
 
 import UserTab from "../components/UserTab";
 import MatchSummary from "../components/MatchSummary";
 
-const matches = [
-  {
-    date: "February 3",
-    location: "Dorchester, ON",
-    status: "Loss",
-    opponent: {
-      name: "Jane Doe",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    home: [6, 5, 2],
-    away: [3, 7, 6],
-  },
-  {
-    date: "March 23",
-    location: "London, ON",
-    status: "Win",
-    opponent: {
-      name: "Saul Goodman",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    home: [6, 4, 6],
-    away: [4, 6, 2],
-  },
-  {
-    date: "February 3",
-    location: "Dorchester, ON",
-    status: "Loss",
-    opponent: {
-      name: "Jane Doe",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    home: [6, 5, 2],
-    away: [3, 7, 6],
-  },
-  {
-    date: "March 23",
-    location: "London, ON",
-    status: "Win",
-    opponent: {
-      name: "Saul Goodman",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    home: [6, 4, 6],
-    away: [4, 6, 2],
-  },
-];
+// const matches = [
+//   {
+//     date: "February 3",
+//     location: "Dorchester, ON",
+//     status: "Loss",
+//     opponent: {
+//       name: "Jane Doe",
+//       image: "https://reactnative.dev/img/tiny_logo.png",
+//     },
+//     home: [6, 5, 2],
+//     away: [3, 7, 6],
+//   },
+//   {
+//     date: "March 23",
+//     location: "London, ON",
+//     status: "Win",
+//     opponent: {
+//       name: "Saul Goodman",
+//       image: "https://reactnative.dev/img/tiny_logo.png",
+//     },
+//     home: [6, 4, 6],
+//     away: [4, 6, 2],
+//   },
+//   {
+//     date: "February 3",
+//     location: "Dorchester, ON",
+//     status: "Loss",
+//     opponent: {
+//       name: "Jane Doe",
+//       image: "https://reactnative.dev/img/tiny_logo.png",
+//     },
+//     home: [6, 5, 2],
+//     away: [3, 7, 6],
+//   },
+//   {
+//     date: "March 23",
+//     location: "London, ON",
+//     status: "Win",
+//     opponent: {
+//       name: "Saul Goodman",
+//       image: "https://reactnative.dev/img/tiny_logo.png",
+//     },
+//     home: [6, 4, 6],
+//     away: [4, 6, 2],
+//   },
+// ];
 
 const HomeScreen = (props) => {
   const [userName, setUserName] = useState("");
   const [userImage, setUserImage] = useState("");
+  const [matches, setMatches] = useState([]);
 
-  useEffect(() => {
-    retrieveDataFromFirebase();
-  }, []);
+  useEffect(() => retrieveDataFromFirebase(), [props]);
 
   const retrieveDataFromFirebase = () => {
-    var userId = props.route.params.userId;
-
-    // read once from data store
-    // firestore.collection("users").doc(userId).get()
-    //   .then(function (doc) {
-    //     if (doc.exists) {
-    //       setDatabaseData(doc.data().text);
-    //       console.log("Document data:", doc.data());
-    //     } else {
-    //       // doc.data() will be undefined in this case
-    //       console.log("No such document!");
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Error getting document:", error);
-    //   });
-
-    // For real-time updates:
     firestore
       .collection("users")
-      .doc(userId)
+      .doc(auth.currentUser.uid)
       .onSnapshot((doc) => {
         setUserName(doc.data().name);
         setUserImage(doc.data().image);
-        console.log("Document data:", doc.data());
+      });
+
+    firestore
+      .collection(`users/${auth.currentUser.uid}/matches`)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.docs.forEach((doc) => {
+          console.log(doc.data());
+          setMatches((prev) => [
+            ...prev,
+            {
+              opponent: doc.data().opponent,
+              date: doc.data().date,
+              yourScore: doc.data().yourScore,
+              theirScore: doc.data().theirScore,
+              status:
+                doc.data().yourScore.reduce((parSum, a) => parSum + a, 0) >
+                doc.data().theirScore.reduce((parSum, a) => parSum + a, 0)
+                  ? "Win"
+                  : "Loss",
+            },
+          ]);
+        });
       });
   };
 
   return (
     <View>
       <UserTab
-        imageUri={userImage}
+        imageUri={userImage === "" ? null : userImage}
         username={userName}
         navigation={props.navigation}
       />
@@ -114,7 +117,7 @@ const HomeScreen = (props) => {
       </TouchableOpacity>
       <ScrollView style={{ height: "65%" }}>
         {matches.map((match, index) => (
-          <MatchSummary match={match} key={index} />
+          <MatchSummary match={match} key={index} user={userName} />
         ))}
       </ScrollView>
     </View>

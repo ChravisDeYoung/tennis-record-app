@@ -1,22 +1,19 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-const MatchSummary = ({ match }) => {
+const MatchSummary = ({ match, user }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.spacedRow}>
-        <Text style={{ fontSize: 12 }}>{match.date}</Text>
-        <Text style={{ fontSize: 12 }}>{match.location}</Text>
-      </View>
+      <Text style={{ fontSize: 12 }}>{match.date}</Text>
       <Text style={styles.title}>{match.status}</Text>
       <View style={styles.scoreRow}>
         <Text
           style={{ fontWeight: match.status === "Win" ? "bold" : "normal" }}
         >
-          John Doe
+          {user}
         </Text>
         <View style={styles.spacedRow}>
-          {match.home.map((score, index) => (
+          {match.yourScore.map((score, index) => (
             <Text key={index} style={styles.score}>
               {score}
             </Text>
@@ -29,16 +26,11 @@ const MatchSummary = ({ match }) => {
           <Text
             style={{ fontWeight: match.status === "Loss" ? "bold" : "normal" }}
           >
-            {match.opponent.name}
+            {match.opponent}
           </Text>
-          <Image
-            source={{ uri: match.opponent.image }}
-            style={styles.opponentImage}
-          />
         </View>
-
         <View style={styles.spacedRow}>
-          {match.away.map((score, index) => (
+          {match.theirScore.map((score, index) => (
             <Text key={index} style={styles.score}>
               {score}
             </Text>

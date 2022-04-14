@@ -1,5 +1,12 @@
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Entypo } from "@expo/vector-icons";
 
 import { auth } from "../FirebaseConfig";
@@ -7,8 +14,15 @@ import { auth } from "../FirebaseConfig";
 const UserTab = (props) => {
   const signoutWithFirebase = () => {
     auth.signOut().then(() => {
-      props.navigation.navigate("Authorization");
+      props.navigation.navigate("Auth");
     });
+  };
+
+  const handleLogout = () => {
+    Alert.alert("Log out", "Are you sure you want to log out?", [
+      { text: "Yes", onPress: signoutWithFirebase },
+      { text: "Cancel", onPress: () => console.log("cancel") },
+    ]);
   };
 
   return (
@@ -34,7 +48,7 @@ const UserTab = (props) => {
           justifyContent: "center",
           paddingLeft: 15,
         }}
-        onPress={signoutWithFirebase}
+        onPress={handleLogout}
       >
         <Entypo name="log-out" size={24} color="black" />
       </TouchableOpacity>

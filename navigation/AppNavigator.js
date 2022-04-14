@@ -5,14 +5,17 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import NewMatchScreen from "../screens/NewMatchScreen";
-import SignupScreen from "../screens/SignupScreen";
+import AuthScreen from "../screens/AuthScreen";
 
 const Stack = createStackNavigator();
 
 function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Authorization">
+      <Stack.Navigator
+        initialRouteName="Auth"
+        screenOptions={{ headerShown: false }}
+      >
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -28,21 +31,7 @@ function AppNavigator() {
             headerTitleAlign: "center",
           }}
         />
-        <Stack.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{
-            title: "Edit Profile",
-            headerStyle: {
-              backgroundColor: "#43b599",
-            },
-            headerTintColor: "white",
-            headerTitleStyle: {
-              fontWeight: "bold",
-            },
-            headerTitleAlign: "center",
-          }}
-        />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen
           name="New Match"
           component={NewMatchScreen}
@@ -58,21 +47,7 @@ function AppNavigator() {
             headerTitleAlign: "center",
           }}
         />
-        <Stack.Screen
-          name="Authorization"
-          component={SignupScreen}
-          options={{
-            title: "Authorization",
-            headerStyle: {
-              backgroundColor: "#43b599",
-            },
-            headerTintColor: "white",
-            headerTitleStyle: {
-              fontWeight: "bold",
-            },
-            headerTitleAlign: "center",
-          }}
-        />
+        <Stack.Screen name="Auth" component={AuthScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

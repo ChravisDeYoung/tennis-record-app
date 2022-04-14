@@ -3,72 +3,89 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 import { auth } from "../FirebaseConfig";
 
-const SignupScreen = (props) => {
+const AuthScreen = (props) => {
   const [showRegister, setShowRegister] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorText, setErrorText] = useState("");
 
   const registerWithFirebase = () => {
+    setErrorText("");
     if (email !== "" && password !== "")
       auth
         .createUserWithEmailAndPassword(email, password)
         .then(() => {
-          props.navigation.navigate("Home");
+          setEmail("");
+          setPassword("");
+          props.navigation.navigate("Profile");
         })
         .catch((error) => {
+          if (error.code === "auth/weak-password")
+            setErrorText("weak password");
           console.log(error);
         });
   };
 
   const loginWithFirebase = () => {
+    setErrorText("");
     auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
+        setEmail("");
+        setPassword("");
         props.navigation.navigate("Home", { userId: auth.currentUser.uid });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        if (error.code === "auth/wrong-password")
+          setErrorText("incorrect password");
+        else if (error.code === "auth/user-not-found")
+          setErrorText("user not found");
+        console.log(error);
+      });
   };
 
   return (
     <View style={{ height: "100%", overflow: "hidden" }}>
       <View
         style={{
-          backgroundColor: "lightpink",
+          backgroundColor: "#dbfc53",
           width: 200,
           height: 200,
           borderRadius: 100,
           position: "absolute",
-          left: -10,
-          top: -10,
+          left: "10%",
+          top: "10%",
+          overflow: "hidden",
         }}
       >
         <View
           style={{
-            backgroundColor: "lightgreen",
-            width: 300,
-            height: 300,
-            borderRadius: 150,
             position: "relative",
-            top: 150,
-            left: 100,
+            width: 200,
+            height: 200,
+            left: 125,
+            borderRadius: 100,
+            borderColor: "white",
+            borderWidth: 5,
           }}
         >
           <View
             style={{
-              backgroundColor: "yellow",
-              width: 150,
-              height: 150,
-              borderRadius: 75,
               position: "relative",
-              top: 250,
-              right: 100,
+              width: 200,
+              height: 200,
+              top: -5,
+              left: -255,
+              borderRadius: 100,
+              borderColor: "white",
+              borderWidth: 5,
             }}
           ></View>
         </View>
       </View>
       <View
         style={{
-          backgroundColor: "lightblue",
+          backgroundColor: "#1985ff",
           width: "80%",
           alignSelf: "center",
           padding: 15,
@@ -81,6 +98,7 @@ const SignupScreen = (props) => {
             fontWeight: "bold",
             textAlign: "center",
             marginBottom: 10,
+            color: "white",
           }}
         >
           {showRegister ? "Sign up" : "Welcome back"}
@@ -98,12 +116,15 @@ const SignupScreen = (props) => {
             paddingVertical: 5,
             paddingHorizontal: 10,
             fontSize: 15,
+            borderColor: errorText !== "" ? "red" : "white",
+            borderWidth: errorText !== "" ? 1 : 0,
           }}
         />
         <TextInput
           onChangeText={(value) => setPassword(value)}
           autoCapitalize="none"
           autoCorrect={false}
+          secureTextEntry
           autoCompleteType="password"
           keyboardType="visible-password"
           placeholder="password"
@@ -113,12 +134,17 @@ const SignupScreen = (props) => {
             paddingVertical: 5,
             paddingHorizontal: 10,
             fontSize: 15,
+            borderColor: errorText !== "" ? "red" : "white",
+            borderWidth: errorText !== "" ? 1 : 0,
           }}
         />
+        {errorText !== "" && (
+          <Text style={{ color: "red", textAlign: "center" }}>{errorText}</Text>
+        )}
         <TouchableOpacity
           onPress={showRegister ? registerWithFirebase : loginWithFirebase}
           style={{
-            backgroundColor: "#c4c4c4",
+            backgroundColor: "white",
             padding: 10,
             textAlign: "center",
             width: "30%",
@@ -126,7 +152,14 @@ const SignupScreen = (props) => {
             margin: 10,
           }}
         >
-          <Text style={{ fontSize: 15, textAlign: "center" }}>
+          <Text
+            style={{
+              fontSize: 15,
+              textAlign: "center",
+              color: "#1985ff",
+              fontWeight: "bold",
+            }}
+          >
             {showRegister ? "Register" : "Log in"}
           </Text>
         </TouchableOpacity>
@@ -134,7 +167,10 @@ const SignupScreen = (props) => {
           {showRegister ? "Already a member? " : "Not yet a member? "}
           <Text
             style={{ textDecorationLine: "underline" }}
-            onPress={() => setShowRegister(!showRegister)}
+            onPress={() => {
+              setShowRegister(!showRegister);
+              setErrorText("");
+            }}
           >
             {showRegister ? "Log in" : "Sign up"}
           </Text>
@@ -144,4 +180,4 @@ const SignupScreen = (props) => {
   );
 };
 
-export default SignupScreen;
+export default AuthScreen;
