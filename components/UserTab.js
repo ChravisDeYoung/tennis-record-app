@@ -7,7 +7,7 @@ import { auth } from "../FirebaseConfig";
 const UserTab = (props) => {
   const signoutWithFirebase = () => {
     auth.signOut().then(() => {
-      props.navigation.navigate("Authorization");
+      props.navigation.navigate("Auth");
     });
   };
 
