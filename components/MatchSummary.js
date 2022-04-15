@@ -2,6 +2,7 @@ import React from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import * as MailComposer from "expo-mail-composer";
+import * as SMS from "expo-sms";
 
 const MatchSummary = ({ match, user }) => {
   const sendMessageWithEmail = async () => {
@@ -20,6 +21,21 @@ const MatchSummary = ({ match, user }) => {
       });
     } else {
       console.log("Email is not available on this device");
+    }
+  };
+
+  const sendMessageWithSMS = async () => {
+    const isAvailable = await SMS.isAvailableAsync();
+    if (isAvailable) {
+      const { result } = await SMS.sendSMSAsync(
+        [],
+        `Great match with ${match.opponent}! I ${
+          match.status === "Win" ? "won" : "lost"
+        } with a score of ${match.yourScore} to ${match.theirScore}.`
+      );
+      console.log(result);
+    } else {
+      console.log("SMS is not available on this device");
     }
   };
 
@@ -68,6 +84,7 @@ const MatchSummary = ({ match, user }) => {
         onPress={() =>
           Alert.alert("Share", "How would you like to share?", [
             { text: "Email", onPress: sendMessageWithEmail },
+            { text: "Text", onPress: sendMessageWithSMS },
             { text: "Cancel" },
           ])
         }
