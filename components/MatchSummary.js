@@ -41,11 +41,14 @@ const MatchSummary = ({ match, user }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 12 }}>{match.date}</Text>
+      <Text style={styles.date}>{match.date}</Text>
       <Text style={styles.title}>{match.status}</Text>
       <View style={styles.scoreRow}>
         <Text
-          style={{ fontWeight: match.status === "Win" ? "bold" : "normal" }}
+          style={{
+            fontWeight: match.status === "Win" ? "bold" : "normal",
+            color: "white",
+          }}
         >
           {user}
         </Text>
@@ -61,7 +64,10 @@ const MatchSummary = ({ match, user }) => {
       <View style={styles.scoreRow}>
         <View style={styles.opponentName}>
           <Text
-            style={{ fontWeight: match.status === "Loss" ? "bold" : "normal" }}
+            style={{
+              fontWeight: match.status === "Loss" ? "bold" : "normal",
+              color: "white",
+            }}
           >
             {match.opponent}
           </Text>
@@ -75,12 +81,7 @@ const MatchSummary = ({ match, user }) => {
         </View>
       </View>
       <TouchableOpacity
-        style={{
-          backgroundColor: "white",
-          alignSelf: "center",
-          padding: 15,
-          marginHorizontal: 10,
-        }}
+        style={styles.button}
         onPress={() =>
           Alert.alert("Share", "How would you like to share?", [
             { text: "Email", onPress: sendMessageWithEmail },
@@ -89,15 +90,16 @@ const MatchSummary = ({ match, user }) => {
           ])
         }
       >
-        <Text style={{ fontSize: 15 }}>Share Match</Text>
+        <Text style={styles.buttonText}>Share Match</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  date: { fontSize: 12, color: "white" },
   container: {
-    backgroundColor: "#c4c4c4",
+    backgroundColor: "#1985ff",
     width: "80%",
     alignSelf: "center",
     padding: 10,
@@ -121,6 +123,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     fontWeight: "bold",
     fontSize: 17,
+    color: "white",
   },
   score: {
     backgroundColor: "white",
@@ -133,6 +136,19 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
     marginLeft: 10,
+  },
+  button: {
+    backgroundColor: "white",
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    textAlign: "center",
+    alignSelf: "center",
+    margin: 10,
+  },
+  buttonText: {
+    fontSize: 15,
+    textAlign: "center",
+    color: "#1985ff",
   },
 });
 

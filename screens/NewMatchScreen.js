@@ -3,6 +3,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -76,43 +77,31 @@ const NewMatchScreen = (props) => {
         username={userName}
         navigation={props.navigation}
       />
-      <Text style={{ fontSize: 20, textAlign: "center", marginTop: 20 }}>
-        New Match
-      </Text>
+      <Text style={styles.title}>New Match</Text>
       <ScrollView>
         <View style={{ paddingHorizontal: 20 }}>
-          <Text style={{ fontSize: 15, paddingBottom: 10, paddingTop: 20 }}>
-            Against
-          </Text>
+          <Text style={styles.inputLabel}>Against</Text>
           <TextInput
             placeholder="John Doe"
-            style={{ backgroundColor: "#c4c4c4", fontSize: 15, padding: 10 }}
+            style={styles.input}
             onChangeText={(e) => setOpponent(e)}
             value={opponent}
           />
         </View>
         <View style={{ paddingHorizontal: 20 }}>
-          <Text style={{ fontSize: 15, paddingBottom: 10, paddingTop: 20 }}>
-            Date
-          </Text>
+          <Text style={styles.inputLabel}>Date</Text>
           <TextInput
             placeholder="April 20, 2021"
-            style={{ backgroundColor: "#c4c4c4", fontSize: 15, padding: 10 }}
+            style={styles.input}
             onChangeText={(e) => setDate(e)}
             value={date}
           />
         </View>
         <View style={{ paddingHorizontal: 20 }}>
-          <Text style={{ fontSize: 15, paddingBottom: 10, paddingTop: 20 }}>
-            Your Score
-          </Text>
-          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <Text style={styles.inputLabel}>Your Score</Text>
+          <View style={styles.scoreContainer}>
             <TextInput
-              style={{
-                backgroundColor: "#c4c4c4",
-                padding: 10,
-                marginHorizontal: 10,
-              }}
+              style={styles.input}
               placeholder="0"
               onChangeText={(e) =>
                 setYourScore((prev) => {
@@ -123,11 +112,7 @@ const NewMatchScreen = (props) => {
               keyboardType="numeric"
             />
             <TextInput
-              style={{
-                backgroundColor: "#c4c4c4",
-                padding: 10,
-                marginHorizontal: 10,
-              }}
+              style={styles.input}
               placeholder="0"
               onChangeText={(e) =>
                 setYourScore((prev) => {
@@ -138,11 +123,7 @@ const NewMatchScreen = (props) => {
               keyboardType="numeric"
             />
             <TextInput
-              style={{
-                backgroundColor: "#c4c4c4",
-                padding: 10,
-                marginHorizontal: 10,
-              }}
+              style={styles.input}
               placeholder="0"
               onChangeText={(e) =>
                 setYourScore((prev) => {
@@ -155,16 +136,10 @@ const NewMatchScreen = (props) => {
           </View>
         </View>
         <View style={{ paddingHorizontal: 20 }}>
-          <Text style={{ fontSize: 15, paddingBottom: 10, paddingTop: 20 }}>
-            Their Score
-          </Text>
-          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <Text style={styles.inputLabel}>Their Score</Text>
+          <View style={styles.scoreContainer}>
             <TextInput
-              style={{
-                backgroundColor: "#c4c4c4",
-                padding: 10,
-                marginHorizontal: 10,
-              }}
+              style={styles.input}
               placeholder="0"
               onChangeText={(e) =>
                 setTheirScore((prev) => {
@@ -175,11 +150,7 @@ const NewMatchScreen = (props) => {
               keyboardType="numeric"
             />
             <TextInput
-              style={{
-                backgroundColor: "#c4c4c4",
-                padding: 10,
-                marginHorizontal: 10,
-              }}
+              style={styles.input}
               placeholder="0"
               onChangeText={(e) =>
                 setTheirScore((prev) => {
@@ -190,11 +161,7 @@ const NewMatchScreen = (props) => {
               keyboardType="numeric"
             />
             <TextInput
-              style={{
-                backgroundColor: "#c4c4c4",
-                padding: 10,
-                marginHorizontal: 10,
-              }}
+              style={styles.input}
               placeholder="0"
               onChangeText={(e) =>
                 setTheirScore((prev) => {
@@ -208,28 +175,16 @@ const NewMatchScreen = (props) => {
         </View>
         <View style={{ flexDirection: "row", justifyContent: "center" }}>
           <TouchableOpacity
-            style={{
-              backgroundColor: "#c4c4c4",
-              alignSelf: "center",
-              paddingVertical: 10,
-              paddingHorizontal: 20,
-              margin: 15,
-            }}
+            style={styles.button}
             onPress={saveDataWithFirebase}
           >
-            <Text style={{ fontSize: 15 }}>Finish</Text>
+            <Text style={styles.buttonText}>Finish</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{
-              backgroundColor: "#c4c4c4",
-              alignSelf: "center",
-              paddingVertical: 10,
-              paddingHorizontal: 20,
-              margin: 15,
-            }}
+            style={styles.button}
             onPress={() => props.navigation.goBack()}
           >
-            <Text style={{ fontSize: 15 }}>Cancel</Text>
+            <Text style={styles.buttonText}>Cancel</Text>
           </TouchableOpacity>
         </View>
         <View style={{ height: 1000 }}></View>
@@ -237,5 +192,46 @@ const NewMatchScreen = (props) => {
     </KeyboardAvoidingView>
   );
 };
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 20,
+    color: "#1985ff",
+  },
+  button: {
+    backgroundColor: "#1985ff",
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    textAlign: "center",
+    alignSelf: "center",
+    margin: 10,
+    marginTop: 20,
+    width: "40%",
+  },
+  buttonText: {
+    fontSize: 15,
+    textAlign: "center",
+    color: "white",
+    fontWeight: "bold",
+  },
+  inputLabel: {
+    fontSize: 15,
+    paddingBottom: 10,
+    paddingTop: 20,
+    color: "#1985ff",
+  },
+  input: {
+    backgroundColor: "white",
+    color: "#1985ff",
+    padding: 10,
+    marginHorizontal: 10,
+    borderColor: "#1985ff",
+    borderWidth: 1,
+  },
+  scoreContainer: { flexDirection: "row", justifyContent: "center" },
+});
 
 export default NewMatchScreen;
