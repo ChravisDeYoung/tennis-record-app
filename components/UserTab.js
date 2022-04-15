@@ -26,14 +26,7 @@ const UserTab = (props) => {
   };
 
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        padding: 12,
-        backgroundColor: "#C4C4C4",
-        justifyContent: "space-between",
-      }}
-    >
+    <View style={styles.container}>
       <TouchableOpacity
         style={styles.profileBtn}
         onPress={() => props.navigation.navigate("Profile")}
@@ -43,20 +36,21 @@ const UserTab = (props) => {
           <Text style={styles.username}>{props.username}</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={{
-          justifyContent: "center",
-          paddingLeft: 15,
-        }}
-        onPress={handleLogout}
-      >
-        <Entypo name="log-out" size={24} color="black" />
+      <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+        <Entypo name="log-out" size={24} color="white" />
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    padding: 12,
+    paddingTop: 22,
+    backgroundColor: "#1985ff",
+    justifyContent: "space-between",
+  },
   image: {
     height: 50,
     width: 50,
@@ -68,12 +62,15 @@ const styles = StyleSheet.create({
   },
   profileBtn: {
     flexDirection: "row",
-    // padding: 12,
-    // backgroundColor: "#C4C4C4",
+  },
+  logoutBtn: {
+    justifyContent: "center",
+    paddingLeft: 15,
   },
   username: {
     fontSize: 20,
     fontWeight: "bold",
+    color: "white",
   },
 });
 
