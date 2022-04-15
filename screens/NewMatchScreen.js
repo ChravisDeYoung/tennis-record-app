@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import * as Speech from "expo-speech";
 
 import { auth, firestore } from "../FirebaseConfig";
 
@@ -53,6 +54,12 @@ const NewMatchScreen = (props) => {
           setDate("");
           setYourScore([0, 0, 0]);
           setTheirScore([0, 0, 0]);
+          if (
+            yourScore.reduce((parSum, a) => parSum + a, 0) >
+            theirScore.reduce((parSum, a) => parSum + a, 0)
+          )
+            Speech.speak("Congrats on the win!");
+          else Speech.speak("Better luck next time!");
           Alert.alert("Match Added!");
           props.navigation.navigate("Home");
         })
@@ -176,7 +183,7 @@ const NewMatchScreen = (props) => {
               placeholder="0"
               onChangeText={(e) =>
                 setTheirScore((prev) => {
-                  prev[0] = Number(e);
+                  prev[1] = Number(e);
                   return [...prev];
                 })
               }
@@ -191,7 +198,7 @@ const NewMatchScreen = (props) => {
               placeholder="0"
               onChangeText={(e) =>
                 setTheirScore((prev) => {
-                  prev[0] = Number(e);
+                  prev[2] = Number(e);
                   return [...prev];
                 })
               }

@@ -1,7 +1,44 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+import * as MailComposer from "expo-mail-composer";
+import * as SMS from "expo-sms";
 
 const MatchSummary = ({ match, user }) => {
+  const sendMessageWithEmail = async () => {
+    const isAvailable = await MailComposer.isAvailableAsync();
+
+    if (isAvailable) {
+      var options = {
+        subject: `Tennis Match ${match.status}`,
+        body: `Great match with ${match.opponent}! I ${
+          match.status === "Win" ? "won" : "lost"
+        } with a score of ${match.yourScore} to ${match.theirScore}.`,
+      };
+
+      MailComposer.composeAsync(options).then((result) => {
+        console.log(result.status);
+      });
+    } else {
+      console.log("Email is not available on this device");
+    }
+  };
+
+  const sendMessageWithSMS = async () => {
+    const isAvailable = await SMS.isAvailableAsync();
+    if (isAvailable) {
+      const { result } = await SMS.sendSMSAsync(
+        [],
+        `Great match with ${match.opponent}! I ${
+          match.status === "Win" ? "won" : "lost"
+        } with a score of ${match.yourScore} to ${match.theirScore}.`
+      );
+      console.log(result);
+    } else {
+      console.log("SMS is not available on this device");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={{ fontSize: 12 }}>{match.date}</Text>
@@ -37,6 +74,23 @@ const MatchSummary = ({ match, user }) => {
           ))}
         </View>
       </View>
+      <TouchableOpacity
+        style={{
+          backgroundColor: "white",
+          alignSelf: "center",
+          padding: 15,
+          marginHorizontal: 10,
+        }}
+        onPress={() =>
+          Alert.alert("Share", "How would you like to share?", [
+            { text: "Email", onPress: sendMessageWithEmail },
+            { text: "Text", onPress: sendMessageWithSMS },
+            { text: "Cancel" },
+          ])
+        }
+      >
+        <Text style={{ fontSize: 15 }}>Share Match</Text>
+      </TouchableOpacity>
     </View>
   );
 };
