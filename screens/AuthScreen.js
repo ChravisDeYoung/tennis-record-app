@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
+import TennisBall from "../components/TennisBall";
+
 import { auth } from "../FirebaseConfig";
 
 const AuthScreen = (props) => {
@@ -46,43 +48,10 @@ const AuthScreen = (props) => {
 
   return (
     <View style={{ height: "100%", overflow: "hidden" }}>
-      <View
-        style={{
-          backgroundColor: "#dbfc53",
-          width: 200,
-          height: 200,
-          borderRadius: 100,
-          position: "absolute",
-          left: "10%",
-          top: "10%",
-          overflow: "hidden",
-        }}
-      >
-        <View
-          style={{
-            position: "relative",
-            width: 200,
-            height: 200,
-            left: 125,
-            borderRadius: 100,
-            borderColor: "white",
-            borderWidth: 5,
-          }}
-        >
-          <View
-            style={{
-              position: "relative",
-              width: 200,
-              height: 200,
-              top: -5,
-              left: -255,
-              borderRadius: 100,
-              borderColor: "white",
-              borderWidth: 5,
-            }}
-          ></View>
-        </View>
-      </View>
+      <TennisBall rotation="30deg" top={-20} left={-20} />
+      <TennisBall rotation="-50deg" top={150} left={150} />
+      <TennisBall rotation="80deg" top={300} left={20} />
+      <TennisBall rotation="120deg" top={500} left={120} />
       <View
         style={{
           backgroundColor: "#1985ff",
