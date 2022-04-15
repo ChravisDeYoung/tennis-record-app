@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, ScrollView, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 
 import { auth, firestore } from "../FirebaseConfig";
 
@@ -55,22 +61,14 @@ const HomeScreen = (props) => {
         username={userName}
         navigation={props.navigation}
       />
-      <Text style={{ fontSize: 20, textAlign: "center", padding: 10 }}>
-        Match History
-      </Text>
+      <Text style={styles.title}>Match History</Text>
       <TouchableOpacity
         onPress={() => props.navigation.navigate("New Match")}
-        style={{
-          backgroundColor: "#c4c4c4",
-          width: 100,
-          alignSelf: "center",
-          padding: 5,
-          marginBottom: 15,
-        }}
+        style={styles.button}
       >
-        <Text style={{ fontSize: 15, textAlign: "center" }}>New Match</Text>
+        <Text style={styles.buttonText}>New Match</Text>
       </TouchableOpacity>
-      <ScrollView style={{ height: "65%" }}>
+      <ScrollView style={{ height: "70%", marginVertical: 10 }}>
         {matches.map((match, index) => (
           <MatchSummary match={match} key={index} user={userName} />
         ))}
@@ -78,5 +76,26 @@ const HomeScreen = (props) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 20,
+    textAlign: "center",
+    padding: 10,
+    fontWeight: "bold",
+  },
+  button: {
+    backgroundColor: "#1985ff",
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    textAlign: "center",
+    alignSelf: "center",
+  },
+  buttonText: {
+    fontSize: 15,
+    textAlign: "center",
+    color: "white",
+  },
+});
 
 export default HomeScreen;
